@@ -1,16 +1,19 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("inventory/", include("apps.inventory.urls")),
 ]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
-    from drf_spectacular.views import (SpectacularAPIView,
-                                       SpectacularRedocView,
-                                       SpectacularSwaggerView)
+    from drf_spectacular.views import (
+        SpectacularAPIView,
+        SpectacularRedocView,
+        SpectacularSwaggerView,
+    )
 
     urlpatterns += [
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

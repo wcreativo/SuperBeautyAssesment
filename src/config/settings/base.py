@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "apps.core",
+    "apps.inventory",
 ]
 
 MIDDLEWARE = [
@@ -77,15 +78,38 @@ REST_FRAMEWORK = {
     ],
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
         },
-    }
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "logs.log",
+            "mode": "a",
+            "encoding": "utf-8",
+            "formatter": "standard",
+            "backupCount": 5,
+            "maxBytes": 1024 * 1024 * 5,
+        },
+    },
+    "loggers": {
+        logger_name: {
+            "level": "WARNING",
+            "propagate": True,
+        }
+        for logger_name in (
+            "django",
+            "django.request",
+            "django.db.backends",
+            "django.template",
+        )
+    },
+    "root": {"level": "DEBUG", "handlers": ["file"]},
 }
-
-CELERY_BROKER_URL = "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = "redis://redis:6379/0"

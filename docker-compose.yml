@@ -10,12 +10,6 @@ services:
     networks:
       - networkProject
 
-  redis:
-    container_name: redis
-    image: "redis:alpine"
-    networks:
-      - networkProject
-
   django:
     env_file:
       - .env
@@ -34,25 +28,6 @@ services:
       - db
     networks:
       - networkProject
-
-  celery:
-    env_file:
-      - .env
-    build:
-      context: .
-    container_name: celery
-    command: celery --app=config worker -l INFO
-    volumes:
-      - ./src:/src
-    depends_on:
-      - db
-      - redis
-      - django
-    networks:
-      - networkProject
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379
-
 
 networks:
   networkProject:
