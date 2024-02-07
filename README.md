@@ -1,4 +1,4 @@
-# Django Template
+# API for Computer Inventory Management 
 
 ## Environment Setup
 
@@ -11,8 +11,8 @@
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/wcreativo/DjangoStartProject.git
-   cd DjangoStartProject
+   git clone https://github.com/wcreativo/SuperBeautyAssesment.git
+   cd SuperBeautyAssesment
    ```
 
 2. **Environment Configuration:**
