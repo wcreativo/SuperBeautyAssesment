@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:12-alpine
+    container_name: project-db
+    env_file:
+      - .env
+    networks:
+      - networkProject
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    networks:
+      - networkProject
+
+  django:
+    env_file:
+      - .env
+    build:
+      context: .
+    container_name: django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/src
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+    networks:
+      - networkProject
+
+  celery:
+    env_file:
+      - .env
+    build:
+      context: .
+    container_name: celery
+    command: celery --app=config worker -l INFO
+    volumes:
+      - ./src:/src
+    depends_on:
+      - db
+      - redis
+      - django
+    networks:
+      - networkProject
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+
+
+networks:
+  networkProject:
