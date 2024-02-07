@@ -42,5 +42,4 @@ docker exec -it django pytest
 * DRF
 * Docker
 * Postgres
-* Redis
-* Celery
+
